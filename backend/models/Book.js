@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const {Schema , model , Types} = mongoose;
 
 const bookShcema = new Schema({

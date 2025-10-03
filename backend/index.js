@@ -1,8 +1,8 @@
 const express = require("express");
-const { getUserFromToken } = require("../middlewares/auth");// get authentication middleware
 const { default: mongoose } = require("mongoose");
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });// get .env file
+const cors = require("cors");
 
 // get routers 
 const userRoutes = require("./routes/userRoutes");
@@ -12,7 +12,11 @@ const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 const PORT = 5000;
-
+// allow request from different ports 
+app.use(cors({
+  origin: "http://localhost:5173", 
+  credentials: true, 
+}));
 app.use(express.json());// parse json middlware 
 
 // connect to mongo db

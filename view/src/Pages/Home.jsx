@@ -1,5 +1,8 @@
-import { useState } from "react"
+import { useState , useEffect} from "react"
 import axios from 'axios';
+import { renderStars } from "../utils/utils";
+import { FaBook, FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
+
 
 export default function Home(){
 
@@ -7,15 +10,41 @@ export default function Home(){
 
     const [books , setBooks] = useState([]);// initialize to empty array
 
-    const loadBooks = async () =>{
-        const books = await axios(`${BASE_URL}/api/books/`)// get all books
+const loadBooks = async () =>{
+    try{
+        const response = await axios(`${BASE_URL}/api/books/withRating`);// get all books
+        setBooks(response.data);
+        console.log(response.data);
+    }catch(err){
+        console.log(err);
     }
+}
 
-
+useEffect(() =>{
+    loadBooks();
+} , []);
 
     return(
         <>
-            <h1>Hello , world</h1>
+            {books.length === 0 ? (
+                <>
+                    loading books...
+                </>
+            ): (
+                <>
+                    {books.map(book => (
+                        <div key={book._id}
+                        onClick={window.localStorage.href=`/bookDetails?bookId=${book._id.toString()}`}
+                        >
+                            <FaBook size={40} />
+                            <p>Title : {book.title}</p>
+                            <p>Auther : {book.auther}</p>
+                            <p>year : {book.year}</p>
+                             <div>Rating: {renderStars(book.averageRating)}</div>
+                        </div>
+                    ))}
+                </>
+            )}
         </>
     )
 }

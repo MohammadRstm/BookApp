@@ -1,3 +1,5 @@
+import {FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
+
 export function renderStars(rating){
   const stars = [];
   for (let i = 1; i <= 5; i++) {
@@ -11,3 +13,4 @@ export function renderStars(rating){
   }
   return stars;
 };
+

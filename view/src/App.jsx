@@ -6,6 +6,8 @@ import LogIn from './Pages/Login';
 import BookDetails from './Pages/BookDetails';
 import Add_Edit from './Pages/Add_Edit';
 
+// dont allow the one that added the book to review it
+
 function App() {
   return (
     <>

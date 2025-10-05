@@ -5,9 +5,22 @@ const User = require("../models/User")
 const mongoose = require('mongoose');
 const authenticateToken = require('../middlewares/auth');
 
+// FOR POSTMAN TESTING , NOT USED IN APP
+router.get("/" , async (req , res) =>{
+  try{
+    const books = await Book.find();
+    return res.status(200).json(books);
+  }catch(err){
+    return res.status(500).json({message : err.messge || 'Server error'});
+  }
+})
+
 
 // GET all books - no autharization needed 
 router.get("/withRating", async (req, res) => {
+    const page = parseInt(req.query.page) || 1;  // default page = 1
+    const limit = parseInt(req.query.limit) || 10; 
+    const skip = (page - 1) * limit;
    try {
     const books = await Book.aggregate([
       {
@@ -36,9 +49,18 @@ router.get("/withRating", async (req, res) => {
           reviewsCount: 1,
         },
       },
+      { $skip: skip },
+      { $limit: limit },
     ]);
 
-    res.json(books);
+    const totalBooks = await Book.countDocuments();
+
+    res.json({
+        books,
+        totalBooks,
+        totalPages: Math.ceil(totalBooks / limit),
+        currentPage: page,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
@@ -157,6 +179,9 @@ router.get("/withRating/:id", async (req, res) => {
 router.post("/addNewBook" , authenticateToken , async (req , res) =>{
   const user = req.user;
   const {author , year , description , genre , title} = req.body;
+  if (year && year <= 0)
+    return res.status(400).json({message : "Invalid year"});
+  
   try{
     await Book.create({
       author,
@@ -175,7 +200,6 @@ router.post("/addNewBook" , authenticateToken , async (req , res) =>{
 // GET BOOKS ADDED BY A SPECIFIC USER
 router.get('/by/me' , authenticateToken , async (req , res) =>{
   const user = req.user;
-  console.log(user)
   try{
     const booksByMe = await Book.find({addedBy: user.id});
     res.status(200).json({messge : 'Books found' , booksByMe});
@@ -188,6 +212,10 @@ router.get('/by/me' , authenticateToken , async (req , res) =>{
 router.put('/edit/:bookId' , authenticateToken , async (req , res) =>{
   const bookId = req.params.bookId;
   const {author , year , description ,genre} = req.body;
+
+  if (year && year <= 0)
+    return res.status(400).json({message : "Invalid year"});
+
   try{
     const book = await Book.findById(bookId);
     if(!book) return res.status(404).json({message : 'Book not found'});// should be impossible to happen

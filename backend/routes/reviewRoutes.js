@@ -5,18 +5,6 @@ const Book = require('../models/Book');
 const mongoose = require('mongoose')
 const authenticateToken = require("../middlewares/auth");
 
-// GET all reviews
-router.get("/", async (req, res) => {
-  try {
-    const reviews = await Review.find()
-      .populate("bookId", "title")
-      .populate("userId", "name email");
-    res.json(reviews);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 // POST new review
 router.post("/newreview/:id", authenticateToken, async (req, res) => {
   try {
@@ -24,6 +12,14 @@ router.post("/newreview/:id", authenticateToken, async (req, res) => {
     const user = req.user;
     const newReview = req.body.newReview;
     const newRating = req.body.newRating;
+
+    // Make sure book exists
+    const bookReviewed = await Book.findById(bookId);
+    if (!bookReviewed)
+      return res.status(404).json({ message: "Book not found" });
+
+    if(bookReviewed.addedBy.toString() === user.id)
+      return res.status(400).json({message : "You can't review a book you added"});
 
     if (!newReview || !newRating) {
       return res.status(400).json({ message: "Review text and rating are required" });
@@ -33,10 +29,6 @@ router.post("/newreview/:id", authenticateToken, async (req, res) => {
       return res.status(400).json({ message: "Rating must be between 1 and 5" });
     }
 
-    // Make sure book exists
-    const bookReviewed = await Book.findById(bookId);
-    if (!bookReviewed)
-      return res.status(404).json({ message: "Book not found" });
 
     const newReviewForBook = new Review({
       bookId: bookId,

@@ -5,19 +5,8 @@ const authenticateToken = require('../middlewares/auth');
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const JWT_SECRET = process.env.JWT_SECRET || "dsffj329ufdksafiw";
+const JWT_SECRET = process.env.JWT_SECRET;
 const SALT_ROUNDS = 10;
-
-
-// GET all users
-router.get("/", async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
 
 // register new user
 router.post("/register", async (req, res) => {

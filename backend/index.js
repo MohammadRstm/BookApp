@@ -1,7 +1,6 @@
 const express = require("express");
 const { default: mongoose } = require("mongoose");
-const path = require("path");
-require("dotenv").config({ path: path.resolve(__dirname, "../.env") });// get .env file
+require("dotenv").config();
 const cors = require("cors");
 
 // get routers 

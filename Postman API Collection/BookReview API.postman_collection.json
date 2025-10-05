@@ -1,0 +1,333 @@
+{
+	"info": {
+		"_postman_id": "c1e8b116-e12e-4abd-b69e-862f3829df6a",
+		"name": "BookReview API",
+		"description": "All api calls to test my book review app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48103898",
+		"_collection_link": "https://window1pc12004-8582330.postman.co/workspace/f1766336-26ce-4e8a-85d9-76bbedaf97ca/collection/48103898-c1e8b116-e12e-4abd-b69e-862f3829df6a?action=share&source=collection_link&creator=48103898"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Register new user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"John Doe\",\r\n  \"email\": \"john@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						},
+						"description": "Signup a new user , please take note of the password and email for later login"
+					},
+					"response": []
+				},
+				{
+					"name": "Login user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"exampleemail#gmail.com\",\r\n    \"password\":\"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						},
+						"description": "Logs in users"
+					},
+					"response": []
+				}
+			],
+			"description": "All api calls for user related logic"
+		},
+		{
+			"name": "Reviews",
+			"item": [
+				{
+					"name": "Create new review",
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newRating\":4.5,\r\n    \"newReview\":\"I loved this book\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/reviews/newreview/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"reviews",
+								"newreview",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "an objectId for a book to know what is the bookId of the review being created \nGet id from \"Get all books\" api in books folder\n"
+								}
+							]
+						},
+						"description": "Created a new review for a specific book , the **:id** param is the book's id that this review belongs to. This request requires authorization , so when you login kindly copy the token the server returns to you , so you can add it here in `Bearer token`.The user that you used to login with is the user that this review will belong to.\n\n\\=> bookId : \"param :id\"\n\n\\=> userId: \"Authorization token\""
+					},
+					"response": []
+				}
+			],
+			"description": "All api calls for review related logic"
+		},
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "Get all books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/books/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"books",
+								""
+							]
+						},
+						"description": "Retrieves all books in the db\n\nUse this to get bookIds for later usage"
+					},
+					"response": []
+				},
+				{
+					"name": "Get books with pagination & rating",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/books/withRating?page =1&limit =8",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"books",
+								"withRating"
+							],
+							"query": [
+								{
+									"key": "page ",
+									"value": "1",
+									"description": "The current page you are requesting\n"
+								},
+								{
+									"key": "limit ",
+									"value": "8",
+									"description": "How many books in each page "
+								}
+							]
+						},
+						"description": "Gets books but in a paginated manner:\n\nThe \"limit\" query parameter specifies the number of books the request will return.\n\nThe \"page & limit\" parameters specify how many books are skipped before we start retreiving them.\n\nfor example :\n\npage = 1 , limit = 8\n\nskip = (page - 1) \\* limit; // so we skip 0 here , and take first 8 books (limit - 8)\n\npage = 2 , limit = 10\n\nskip = 10 ==> we skip the first 10 books in the \"Books\" table and we take the next 10 as limit is set to 10.\n\nThis creates the logic of a paginated list of books."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Specific book with rating and reviews",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/books/withRating/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"books",
+								"withRating",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "id of the book you want to get its details od the form objectId - get id from \"Get all books\"\n"
+								}
+							]
+						},
+						"description": "Gets a book's details which include average rating and all reviews."
+					},
+					"response": []
+				},
+				{
+					"name": "Add new book",
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\" : \"Book's title\",\r\n    \"author\" : \"author name\",\r\n    \"year\" : \"year published\",\r\n    \"description\" : \"desc\",\r\n    \"genre\" : \"fiction/action/horror\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/books/addNewBook",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"books",
+								"addNewBook"
+							]
+						},
+						"description": "Adds a new book to the collection , the addedBy attribute which specifies by whome this book was added is taken from the authorization token."
+					},
+					"response": []
+				},
+				{
+					"name": "Get books added by a specific user",
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/books/by/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"books",
+								"by",
+								"me"
+							]
+						},
+						"description": "Gets all the books added by a specific user , the user is the one you used to login"
+					},
+					"response": []
+				},
+				{
+					"name": "Edit book",
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"author\" : \"author name\",\r\n    \"year\" : \"year published\",\r\n    \"description\" : \"desc\",\r\n    \"genre\" : \"fiction/action/horror\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/books/edit/:bookId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"books",
+								"edit",
+								":bookId"
+							],
+							"variable": [
+								{
+									"key": "bookId",
+									"value": "",
+									"description": "ObjectId of edited book , check added books (\"Get books added by a specific user\")  for the user that you took token from , and take an Id for one of his/her books from thier\n"
+								}
+							]
+						},
+						"description": "Edits book's info , the book that is edited is added by the user that you used to login with. Users aren't allowed to edit any book they want , only books added by them"
+					},
+					"response": []
+				}
+			],
+			"description": "All api calls related to Books logic"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

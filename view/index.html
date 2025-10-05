@@ -1,11 +1,36 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>view</title>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/29/29302.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookReview</title>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      html.classList.add('no-transition'); // prevent transitions on first paint
+      try {
+        const darkMode = JSON.parse(localStorage.getItem('darkMode'));
+        if (darkMode) {
+          html.classList.add('dark');
+          html.classList.remove('light');
+        } else {
+          html.classList.add('light');
+          html.classList.remove('dark');
+        }
+      } catch(e) {
+        html.classList.add('light');
+        html.classList.remove('dark');
+      }
+      // remove no-transition immediately after first paint
+      requestAnimationFrame(() => {
+        html.classList.remove('no-transition');
+      });
+    })();
+  </script>
+</head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>

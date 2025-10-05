@@ -1,72 +1,97 @@
 import { useEffect, useState } from "react";
-import { BookOpen, Home, Plus, LogIn, LogOut } from 'lucide-react';
+import { Link } from "react-router-dom";
+import { BookOpen, Home, Plus, LogIn, LogOut, Moon, Sun } from 'lucide-react';
 
-const Header = () => {
+const Header = ({ isDarkMode, toggleDarkMode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() =>{
+  useEffect(() => {
     if(localStorage.getItem('token')){
-        setIsAuthenticated(true);
-    }else{
-        setIsAuthenticated(false);
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
     }
-  }, [localStorage])
+  }, [])
 
   const handleLogout = () => {
     localStorage.clear();
     setIsAuthenticated(false);
-    window.location.reload();
+    // window.location.reload();
   };
 
   return (
-    <header className="bg-[#CFC1B4] border-b-2 border-[#C19C82] rounded-b-3xl">
+    <header className="bg-[var(--color-primary)] border-b-2 border-[var(--color-secondary)] rounded-b-3xl transition-colors duration-300">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Left side - Logo */}
-          <div className="flex items-center space-x-3">
-            <div className="bg-[#C19C82] p-3 rounded-xl shadow-sm">
-              <BookOpen className="h-7 w-7 text-[#111111]" />
+          {/* Left side - Logo and Dark Mode Toggle */}
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-3">
+              <div className="bg-[var(--color-secondary)] p-3 rounded-xl shadow-sm transition-colors duration-300">
+                <BookOpen className="h-7 w-7 text-[var(--color-text)]" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-[var(--color-text)]">
+                  BookStore
+                </h1>
+                <p className="text-sm text-[var(--color-text)]/80">
+                  Your Reading Haven
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-[#111111]">BookStore</h1>
-              <p className="text-sm text-[#111111]/80">Your Reading Haven</p>
-            </div>
+
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-[var(--color-accent)] hover:bg-[var(--color-secondary)] transition-all duration-200 border border-[var(--color-secondary)] text-[var(--color-text)]"
+            >
+              {isDarkMode ? (
+                <>
+                  <Sun className="h-5 w-5 text-yellow-500" />
+                  <span className="font-medium">Light</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="h-5 w-5" />
+                  <span className="font-medium">Dark</span>
+                </>
+              )}
+            </button>
           </div>
 
           {/* Right side - Navigation */}
           <nav className="flex items-center space-x-4">
-            <a 
-              href="/" 
-              className="flex items-center space-x-2 text-[#111111] hover:text-[#C19C82] font-medium transition-all duration-200 px-4 py-2 rounded-xl hover:bg-[#EBD0BF] group"
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2 text-[var(--color-text)] hover:text-[var(--color-secondary)] font-medium transition-all duration-200 px-4 py-2 rounded-xl hover:bg-[var(--color-accent)] group"
             >
               <Home className="h-5 w-5" />
               <span>Home</span>
-            </a>
+            </Link>
             
-            <a 
-              href="/addEdit" 
-              className="flex items-center space-x-2 text-[#111111] hover:text-[#C19C82] font-medium transition-all duration-200 px-4 py-2 rounded-xl hover:bg-[#EBD0BF] group"
+            <Link 
+              to="/addEdit" 
+              className="flex items-center space-x-2 text-[var(--color-text)] hover:text-[var(--color-secondary)] font-medium transition-all duration-200 px-4 py-2 rounded-xl hover:bg-[var(--color-accent)] group"
             >
               <Plus className="h-5 w-5" />
               <span>Add-Edit</span>
-            </a>
+            </Link>
             
             {isAuthenticated ? (
               <button
                 onClick={handleLogout}
-                className="flex items-center space-x-2 bg-[#C19C82] text-[#111111] font-semibold px-5 py-2 rounded-xl hover:bg-[#EBD0BF] transition-all duration-200 shadow-md hover:shadow-lg border border-[#111111]/10"
+                className="flex items-center space-x-2 bg-[var(--color-secondary)] text-[var(--color-text)] font-semibold px-5 py-2 rounded-xl hover:bg-[var(--color-accent)] transition-all duration-200 shadow-md hover:shadow-lg border border-[var(--color-text)]/10"
               >
                 <LogOut className='h-5 w-5' />
                 <span>LogOut</span>
               </button>
             ) : (
-              <a 
-                href="/login" 
-                className="flex items-center space-x-2 bg-[#C19C82] text-[#111111] font-semibold px-5 py-2 rounded-xl hover:bg-[#EBD0BF] transition-all duration-200 shadow-md hover:shadow-lg border border-[#111111]/10"
+              <Link 
+                to="/login" 
+                className="flex items-center space-x-2 bg-[var(--color-secondary)] text-[var(--color-text)] font-semibold px-5 py-2 rounded-xl hover:bg-[var(--color-accent)] transition-all duration-200 shadow-md hover:shadow-lg border border-[var(--color-text)]/10"
               >
                 <LogIn className="h-5 w-5" />
                 <span>LogIn</span>
-              </a>
+              </Link>
             )}
           </nav>
         </div>

@@ -37,6 +37,3 @@ app.listen(PORT, () => {
 
 
 
-// db connection 
-// username = mohammadrstm2004_db_user
-// pass = biriGAHbjm2J6qOP
